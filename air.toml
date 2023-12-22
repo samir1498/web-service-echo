@@ -1,0 +1,7 @@
+# air.toml
+
+root = "."  # Project root directory
+
+[build]
+cmd = "go"
+args = ["build", "-o", "bin/myapp", "./cmd/myapp"]
