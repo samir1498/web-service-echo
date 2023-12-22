@@ -1,0 +1,47 @@
+.env
+# Compiled Object files, Static and Dynamic libs (Shared Objects)
+*.o
+*.a
+*.lib
+*.dll
+*.so
+*.dylib
+
+# Folders
+_obj/
+_test/
+_testmain.go
+bin/
+gen/
+release/
+.vscode/
+.idea/
+
+# Compiled Go files
+*.exe
+*.exe~
+*.test
+*.prof
+*.out
+/_test/
+
+# Local binary files for tools like `go install`
+/bin/
+
+# Log files
+*.log
+
+# Temporary files
+*.tmp
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+# Dependency directories
+vendor/
+
+# Auto-generated files
+generate/
