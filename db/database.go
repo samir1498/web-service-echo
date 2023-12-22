@@ -22,11 +22,11 @@ func Init() {
 	}
 
 	// Retrieve values from environment variables or use default values
-	host := getEnv("DB_HOST", "localhost")
-	port := getEnv("DB_PORT", "5432")
-	user := getEnv("DB_USER", "postgres")
-	password := getEnv("DB_PASSWORD", "samir")
-	dbname := getEnv("DB_NAME", "users")
+	host := getEnv("DB_HOST")
+	port := getEnv("DB_PORT")
+	user := getEnv("DB_USER")
+	password := getEnv("DB_PASSWORD")
+	dbname := getEnv("DB_NAME")
 
 	psqlInfo := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
 		host, port, user, password, dbname)
@@ -44,7 +44,6 @@ func Init() {
 
 	fmt.Println("Successfully connected to the database!")
 
-	// Create "users" table if it doesn't exist
 	createTableIfNotExists()
 }
 
@@ -60,9 +59,10 @@ func createTableIfNotExists() {
 	}
 }
 
-func getEnv(key, fallbackValue string) string {
-	if value, exists := os.LookupEnv(key); exists {
-		return value
+func getEnv(key string) string {
+	value, exists := os.LookupEnv(key)
+	if !exists {
+		log.Fatalf("Environment variable %s not set", key)
 	}
-	return fallbackValue
+	return value
 }
