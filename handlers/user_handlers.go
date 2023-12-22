@@ -6,27 +6,22 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"example/web-service-gin/db"
+	"example/web-service-gin/models"
 )
 
-// User represents a user in the database.
-type User struct {
-	ID   int    `json:"id"`
-	Name string `json:"name"`
-}
 
-// GetUsers handles the GET request to retrieve a list of users.
+
 func GetUsers(c echo.Context) error {
-	// Use db.DB to perform database operations
 	rows, err := db.DB.Query("SELECT id, name FROM users")
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Internal Server Error"})
 	}
 	defer rows.Close()
 
-	users := make([]User, 0)
+	users := make([]models.User, 0)
 
 	for rows.Next() {
-		var user User
+		var user models.User
 		err := rows.Scan(&user.ID, &user.Name)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Internal Server Error"})
@@ -37,10 +32,35 @@ func GetUsers(c echo.Context) error {
 	return c.JSON(http.StatusOK, users)
 }
 
-// CreateUser handles the POST request to create a new user.
+func GetUser(c echo.Context) error {
+	id := c.Param("id")
+
+	rows, err := db.DB.Query("SELECT id, name FROM users where id = $1", id)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Internal Server Error"})
+	}
+	defer rows.Close()
+
+	// Check if there are any rows
+	if !rows.Next() {
+		return c.JSON(http.StatusNotFound, map[string]string{"error": "User not found"})
+	}
+	fmt.Print(rows)
+
+	// Scan the values from the row
+	var user models.User
+	err = rows.Scan(&user.ID, &user.Name)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Internal Server Error"})
+	}
+
+	// Return the user data as JSON
+	return c.JSON(http.StatusOK, user)
+}
+
+
 func CreateUser(c echo.Context) error {
-	// Use db.DB to perform database operations
-	var newUser User
+	var newUser models.User
 	if err := c.Bind(&newUser); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid request payload"})
 	}

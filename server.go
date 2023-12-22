@@ -15,6 +15,7 @@ func main() {
 	// Define routes
 	e.GET("/", handlers.Hello)
 	e.GET("/users", handlers.GetUsers)
+	e.GET("/users/:id", handlers.GetUser)
 	e.POST("/user", handlers.CreateUser)
 
 	e.Logger.Fatal(e.Start(":1323"))
